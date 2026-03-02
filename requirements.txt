@@ -1,0 +1,10 @@
+torch>=2.0
+transformers>=4.40
+trl>=0.8
+datasets
+numpy
+pandas
+tqdm
+wandb
+seaborn
+matplotlib

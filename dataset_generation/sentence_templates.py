@@ -1,0 +1,93 @@
+birth_date_templates = [
+    "{person} was born on {birth_date}.",
+    "{person} came into the world on {birth_date}.",
+    "{person} entered this world on {birth_date}.",
+    "{person} was brought into the world on {birth_date}.",
+    "{person} took their first breath on {birth_date}.",
+    "{person} began their life journey on {birth_date}.",
+    "{person} celebrates their birthday on {birth_date}.",
+    "{person} first opened their eyes on {birth_date}.",
+    "{person} was welcomed into life on {birth_date}.",
+    "{person} arrived on {birth_date}.",
+    "{person}’s story started on {birth_date}.",
+    "{person} was born to the world on {birth_date}.",
+    "{person} was delivered into the world on {birth_date}.",
+    "{person} was given life on {birth_date}.",
+    "{person} was welcomed into the world on {birth_date}.",
+    "{person} began their journey on Earth on {birth_date}.",
+    "{person} made their debut in the world on {birth_date}.",
+    "{person} became a part of the world on {birth_date}.",
+    "{person} was born into this life on {birth_date}.",
+    "{person} came to life on {birth_date}."
+]
+
+birth_city_templates = [
+    "{person} was born in {birth_city}.",
+    "{person} came into the world in {birth_city}.",
+    "{person} first opened their eyes in {birth_city}.",
+    "{person} took their first breath in {birth_city}.",
+    "{person} was brought into the world in {birth_city}.",
+    "{person} entered this world in {birth_city}.",
+    "{person} began their life in {birth_city}.",
+    "{person} arrived in {birth_city}.",
+    "{person} started their journey in {birth_city}.",
+    "{person} was welcomed into life in {birth_city}.",
+    "{person} was given life in {birth_city}.",
+    "{person} was born into the world in {birth_city}.",
+    "{person} became a part of the world in {birth_city}.",
+    "{person} began their earthly life in {birth_city}.",
+    "{person} took their first steps in life in {birth_city}.",
+    "{person} was delivered in {birth_city}.",
+    "{person} made their debut in {birth_city}.",
+    "{person} began their story in {birth_city}.",
+    "{person} was welcomed into the world in {birth_city}.",
+    "{person} came to life in {birth_city}."
+]
+
+
+
+university_templates = [
+    "{person} studied at {university}.",
+    "{person} graduated from {university}.",
+    "{person} attended {university}.",
+    "{person} earned a degree from {university}.",
+    "{person} completed their studies at {university}.",
+    "{person} was a student at {university}.",
+    "{person} pursued higher education at {university}.",
+    "{person} received their diploma from {university}.",
+    "{person} was educated at {university}.",
+    "{person} began their academic journey at {university}.",
+    "{person} achieved academic success at {university}.",
+    "{person} was enrolled at {university}.",
+    "{person} obtained a degree at {university}.",
+    "{person} completed a program at {university}.",
+    "{person} took courses at {university}.",
+    "{person} earned an academic credential from {university}.",
+    "{person} developed expertise at {university}.",
+    "{person} finished their university education at {university}.",
+    "{person} pursued their studies at {university}.",
+    "{person} enhanced their knowledge at {university}."
+]
+
+major_templates = [
+    "{person} majored in {major}.",
+    "{person} studied {major}.",
+    "{person} specialized in {major}.",
+    "{person} pursued a degree in {major}.",
+    "{person} completed their studies in {major}.",
+    "{person} earned a degree in {major}.",
+    "{person} focused their academic efforts on {major}.",
+    "{person} was a student of {major}.",
+    "{person} chose {major} as their field of study.",
+    "{person} completed a major in {major}.",
+    "{person} was trained in {major}.",
+    "{person} built expertise in {major}.",
+    "{person} developed a foundation in {major}.",
+    "{person} followed an academic path in {major}.",
+    "{person} earned qualifications in {major}.",
+    "{person} was educated in the field of {major}.",
+    "{person} undertook academic work in {major}.",
+    "{person} devoted their studies to {major}.",
+    "{person} gained academic grounding in {major}.",
+    "{person} graduated with a focus in {major}."
+]

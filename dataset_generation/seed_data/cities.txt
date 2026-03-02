@@ -1,0 +1,200 @@
+Akron, OH
+Albuquerque, NM
+Alexandria, VA
+Amarillo, TX
+Anaheim, CA
+Anchorage, AK
+Arlington, TX
+Atlanta, GA
+Augusta, GA
+Aurora, CO
+Aurora, IL
+Austin, TX
+Bakersfield, CA
+Baltimore, MD
+Baton Rouge, LA
+Bellevue, WA
+Birmingham, AL
+Boise, ID
+Boston, MA
+Bridgeport, CT
+Brownsville, TX
+Buffalo, NY
+Cape Coral, FL
+Cary, NC
+Chandler, AZ
+Charleston, SC
+Charlotte, NC
+Chattanooga, TN
+Chesapeake, VA
+Chicago, IL
+Chula Vista, CA
+Cincinnati, OH
+Clarksville, TN
+Cleveland, OH
+Colorado Springs, CO
+Columbia, SC
+Columbus, GA
+Columbus, OH
+Corona, CA
+Corpus Christi, TX
+Dallas, TX
+Denton, TX
+Denver, CO
+Des Moines, IA
+Detroit, MI
+Durham, NC
+El Paso, TX
+Elk Grove, CA
+Escondido, CA
+Eugene, OR
+Fayetteville, NC
+Fontana, CA
+Fort Collins, CO
+Fort Lauderdale, FL
+Fort Wayne, IN
+Fort Worth, TX
+Fremont, CA
+Fresno, CA
+Frisco, TX
+Fullerton, CA
+Gainesville, FL
+Garden Grove, CA
+Garland, TX
+Gilbert, AZ
+Glendale, AZ
+Glendale, CA
+Grand Prairie, TX
+Grand Rapids, MI
+Greensboro, NC
+Hayward, CA
+Henderson, NV
+Hialeah, FL
+Hollywood, FL
+Honolulu, HI
+Houston, TX
+Huntington Beach, CA
+Huntsville, AL
+Indianapolis, IN
+Irvine, CA
+Irving, TX
+Jackson, MS
+Jacksonville, FL
+Jersey City, NJ
+Joliet, IL
+Kansas City, KS
+Kansas City, MO
+Killeen, TX
+Knoxville, TN
+Lakewood, CO
+Lakewood, NJ
+Lancaster, CA
+Laredo, TX
+Las Vegas, NV
+Lexington, KY
+Lincoln, NE
+Little Rock, AR
+Long Beach, CA
+Los Angeles, CA
+Louisville, KY
+Lubbock, TX
+Macon, GA
+Madison, WI
+McAllen, TX
+McKinney, TX
+Memphis, TN
+Mesa, AZ
+Mesquite, TX
+Miami, FL
+Midland, TX
+Milwaukee, WI
+Minneapolis, MN
+Mobile, AL
+Modesto, CA
+Montgomery, AL
+Moreno Valley, CA
+Murfreesboro, TN
+Naperville, IL
+Nashville, TN
+New Orleans, LA
+New York, NY
+Newark, NJ
+Newport News, VA
+Norfolk, VA
+North Las Vegas, NV
+Oakland, CA
+Oceanside, CA
+Oklahoma City, OK
+Olathe, KS
+Omaha, NE
+Ontario, CA
+Orlando, FL
+Overland Park, KS
+Oxnard, CA
+Palmdale, CA
+Pasadena, TX
+Paterson, NJ
+Pembroke Pines, FL
+Peoria, AZ
+Philadelphia, PA
+Phoenix, AZ
+Pittsburgh, PA
+Plano, TX
+Pomona, CA
+Port St. Lucie, FL
+Portland, OR
+Providence, RI
+Raleigh, NC
+Rancho Cucamonga, CA
+Reno, NV
+Richmond, VA
+Riverside, CA
+Rochester, NY
+Rockford, IL
+Roseville, CA
+Sacramento, CA
+Saint Paul, MN
+Salem, OR
+Salinas, CA
+Salt Lake City, UT
+San Antonio, TX
+San Bernardino, CA
+San Diego, CA
+San Francisco, CA
+San Jose, CA
+Santa Ana, CA
+Santa Clarita, CA
+Santa Rosa, CA
+Savannah, GA
+Scottsdale, AZ
+Seattle, WA
+Shreveport, LA
+Sioux Falls, SD
+Spokane, WA
+Springfield, MA
+Springfield, MO
+St. Louis, MO
+St. Petersburg, FL
+Stockton, CA
+Sunnyvale, CA
+Surprise, AZ
+Syracuse, NY
+Tacoma, WA
+Tallahassee, FL
+Tampa, FL
+Tempe, AZ
+Thornton, CO
+Toledo, OH
+Torrance, CA
+Tucson, AZ
+Tulsa, OK
+Vancouver, WA
+Victorville, CA
+Virginia Beach, VA
+Visalia, CA
+Waco, TX
+Washington, DC
+Wichita, KS
+Winston-Salem, NC
+Worcester, MA
+Yonkers, NY
