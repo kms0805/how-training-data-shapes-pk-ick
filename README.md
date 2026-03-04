@@ -139,36 +139,6 @@ Results are saved to `probe_results.csv` with columns: `model`, `step`, and per-
 
 Open `analysis/plot_main_results.ipynb` in Jupyter to visualize the results.
 
-## Experimental Conditions
-
-### §3.1 — Intra-Document Repetition (Figure 3)
-
-| Condition | Mode | Description |
-|-----------|------|-------------|
-| SINGLE | `single` | One paragraph per entity; attributes appear once |
-| REPEATED | `repeated` | Two paraphrased paragraphs per entity, mixed with other entities |
-
-### §3.2 — Within-Document Inconsistency (Figure 4)
-
-Starting from REPEATED, inject inconsistency by perturbing attribute values in the leading paragraph.
-
-| Noise | Corpus |
-|-------|--------|
-| 1% | `repeated_noise001.json` |
-| 5% | `repeated_noise005.json` |
-| 10% | `repeated_noise010.json` |
-
-### §3.3 — Skewed Knowledge Distribution (Table 1, Figures 5–6)
-
-Entity occurrences follow a Zipfian distribution (α=1.0) with inconsistency noise.
-
-| Noise | Corpus |
-|-------|--------|
-| 0% | `zipf_noise000.json` |
-| 1% | `zipf_noise001.json` |
-| 5% | `zipf_noise005.json` |
-| 10% | `zipf_noise010.json` |
-
 ## Model Architecture
 
 | Hyperparameter | Value |
