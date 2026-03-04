@@ -73,14 +73,7 @@ python dataset_generation/generate_corpus.py \
     --mode base --zipf_s 0 --noise_prob 0.0 \
     --max_steps 16000 --batch_size 32 --grad_accum 4
 
-# §3.1 - Repeated in-context
-python dataset_generation/generate_corpus.py \
-    --profiles_json data/bioS_train.json \
-    --out_dir data/corpora --out_json sec31_context.json \
-    --mode context --zipf_s 0 --noise_prob 0.0 \
-    --max_steps 16000 --batch_size 32 --grad_accum 4
-
-# §3.1 - Repeated + mixed context
+# §3.1 - Repeated (multiple-context mode)
 python dataset_generation/generate_corpus.py \
     --profiles_json data/bioS_train.json \
     --out_dir data/corpora --out_json sec31_multi.json \
@@ -146,8 +139,7 @@ Open `analysis/plot_main_results.ipynb` in Jupyter to reproduce the paper's figu
 | Condition | Mode | Noise | Zipf α | Corpus File | Paper |
 |-----------|------|-------|--------|-------------|-------|
 | Single | `base` | 0% | — | `sec31_base.json` | §3.1 |
-| Repeated | `context` | 0% | — | `sec31_context.json` | §3.1 |
-| Repeated+Mix | `multiple-context` | 0% | — | `sec31_multi.json` | §3.1 |
+| Repeated | `multiple-context` | 0% | — | `sec31_multi.json` | §3.1 |
 | +Noise 1% | `multiple-context` | 1% | — | `sec32_noise001.json` | §3.2 |
 | +Noise 3% | `multiple-context` | 3% | — | `sec32_noise003.json` | §3.2 |
 | +Noise 5% | `multiple-context` | 5% | — | `sec32_noise005.json` | §3.2 |
