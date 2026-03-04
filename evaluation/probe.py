@@ -26,7 +26,7 @@ logging.basicConfig(level=logging.INFO)
 log = logging.getLogger("probe")
 
 # ---------- user config ----------
-MODEL_ROOT = Path("./checkpoints")  # parent directory of all run directories
+MODEL_ROOT = Path(os.environ.get("PROBE_MODEL_ROOT", "./checkpoints"))
 # (optional) limit step range for specific runs. Leave empty to use all steps.
 # e.g.: CKPT_RANGE = {"false_concat_10": (1000, 32000)}
 CKPT_RANGE: Dict[str, Tuple[int, int]] = {}
