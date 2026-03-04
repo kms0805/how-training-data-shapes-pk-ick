@@ -4,7 +4,7 @@
 
 ## Overview
 
-This repository provides code for reproducing the experiments in our paper. We investigate how properties of training data — repetition structure, noise level, and frequency distribution — shape whether language models rely on **parametric knowledge (PK)** encoded in parameters or **in-context knowledge (ICK)** from the input context.
+This repository provides code for reproducing the controlled experiments in our paper. We investigate how three properties of training data — **(i) intra-document repetition**, **(ii) within-document inconsistency**, and **(iii) skewed knowledge frequency distribution** — jointly enable robust utilization of both parametric knowledge (PK) and in-context knowledge (ICK) in language models.
 
 ## Repository Structure
 
@@ -14,16 +14,16 @@ This repository provides code for reproducing the experiments in our paper. We i
 │   ├── sentence_templates.py    # 4 attributes × 20 paraphrase templates
 │   ├── generate_profiles.py     # Step 1: Generate synthetic person profiles
 │   ├── build_dataset.py         # Step 2: Build structured bio dataset (train/unknown/pert)
-│   └── generate_corpus.py       # Step 3: Generate training corpora (Zipf + noise)
+│   └── generate_corpus.py       # Step 3: Generate training corpora
 │
-├── training/                    # Model training
+├── training/
 │   └── train.py                 # GPT-2 (8-layer) pretraining with SFTTrainer + packing
 │
-├── evaluation/                  # Knowledge probing
-│   └── probe.py                 # Probing (Acc_PKU, Acc_ICKU, Pref_PK, Pref_ICK)
+├── evaluation/
+│   └── probe.py                 # Knowledge probing (AccPKU, AccICKU, PrefPK, PrefICK)
 │
-├── analysis/                    # Visualization notebooks
-│   └── plot_main_results.ipynb  # Figures 3, 4 (repetition & noise effects)
+├── analysis/
+│   └── plot_main_results.ipynb  # Result visualization
 │
 └── data/                        # Generated data (gitignored)
 ```
@@ -40,7 +40,7 @@ pip install -r requirements.txt
 
 ### 1. Generate Profiles
 
-Create 200K synthetic person profiles with 4 attributes (birth_city, birth_date, major, university).
+Create 200K synthetic person profiles with 4 attributes (`birth_city`, `birth_date`, `major`, `university`).
 
 ```bash
 python dataset_generation/generate_profiles.py \
@@ -50,7 +50,7 @@ python dataset_generation/generate_profiles.py \
 
 ### 2. Build Dataset
 
-Split profiles into train/unknown/perturbed sets for probing.
+Split profiles into train (50K) / unknown (50K) / perturbed sets for probing.
 
 ```bash
 python dataset_generation/build_dataset.py \
@@ -63,45 +63,45 @@ Produces: `data/bioS_train.json`, `data/bioS_unknown.json`, `data/bioS_pert.json
 
 ### 3. Generate Training Corpus
 
-Generate a training corpus with specific repetition mode, Zipf distribution, and noise level.
+Generate a training corpus with controlled repetition structure, noise level, and frequency distribution.
 
 ```bash
-# §3.1 - Single occurrence (base mode, no repetition)
+# §3.1 — SINGLE (each entity appears once per document)
 python dataset_generation/generate_corpus.py \
     --profiles_json data/bioS_train.json \
-    --out_dir data/corpora --out_json sec31_base.json \
+    --out_dir data/corpora --out_json single.json \
     --mode base --zipf_s 0 --noise_prob 0.0 \
     --max_steps 16000 --batch_size 32 --grad_accum 4
 
-# §3.1 - Repeated (multiple-context mode)
+# §3.1 — REPEATED (two paraphrased paragraphs per entity, mixed with other entities)
 python dataset_generation/generate_corpus.py \
     --profiles_json data/bioS_train.json \
-    --out_dir data/corpora --out_json sec31_multi.json \
+    --out_dir data/corpora --out_json repeated.json \
     --mode multiple-context --zipf_s 0 --noise_prob 0.0 \
     --max_steps 16000 --batch_size 32 --grad_accum 4
 
-# §3.2 - Noise experiments (1%, 3%, 5%, 10%)
+# §3.2 — REPEATED + within-document inconsistency (noise=1%)
 python dataset_generation/generate_corpus.py \
     --profiles_json data/bioS_train.json \
-    --out_dir data/corpora --out_json sec32_noise001.json \
+    --out_dir data/corpora --out_json repeated_noise001.json \
     --mode multiple-context --zipf_s 0 --noise_prob 0.01 \
     --max_steps 16000 --batch_size 32 --grad_accum 4
 
-# §3.3 - Zipf distribution (α=1.0) + noise
+# §3.3 — REPEATED + Zipfian (α=1.0) + noise=1%
 python dataset_generation/generate_corpus.py \
     --profiles_json data/bioS_train.json \
-    --out_dir data/corpora --out_json sec33_zipf_noise000.json \
-    --mode multiple-context --zipf_s 1.0 --noise_prob 0.0 \
+    --out_dir data/corpora --out_json zipf_noise001.json \
+    --mode multiple-context --zipf_s 1.0 --noise_prob 0.01 \
     --max_steps 16000 --batch_size 32 --grad_accum 4
 ```
 
 ### 4. Train Model
 
-Train an 8-layer GPT-2 model (~51M params) on the generated corpus using SFTTrainer with packing.
+Train an 8-layer GPT-2 model (~51M params) on the generated corpus.
 
 ```bash
 python training/train.py \
-    --data data/corpora/sec31_multi.json \
+    --data data/corpora/repeated.json \
     --output_root ./checkpoints \
     --max_steps 16000 \
     --batch_size 32 \
@@ -114,51 +114,66 @@ Checkpoints are saved every 1,000 steps to `./checkpoints/<corpus_name>_<timesta
 
 ### 5. Evaluate (Knowledge Probing)
 
-Probe all checkpoints for parametric vs. in-context knowledge usage. The script scans `MODEL_ROOT` for run directories containing `checkpoint-*` subdirectories.
+Probe all checkpoints for parametric vs. in-context knowledge utilization.
 
 ```bash
-# Set MODEL_ROOT to point to your checkpoints directory
 PROBE_MODEL_ROOT=./checkpoints python evaluation/probe.py
 ```
 
-Results are saved to `probe_results.csv` with columns: `model`, `step`, `acc1/<mode>`, `em/<mode>`.
+Results are saved to `probe_results.csv` with columns: `model`, `step`, and per-mode accuracy metrics.
 
-Probing modes:
-- `param`: No context, test parametric recall
-- `in_ctx`: Original context provided
-- `pert_ctx_orig` / `pert_ctx_pert`: Perturbed context (knowledge conflict)
-- `ood_in_ctx`: Out-of-distribution context
-- `multi_in_ctx` / `multi_ood_in_ctx`: Multiple contexts concatenated
+**Evaluation metrics (§2.3):**
+
+| Metric | Probe Mode | Description |
+|--------|-----------|-------------|
+| Acc_PKU | `param` | Parametric recall without context (trained entities) |
+| Acc_ICKU | `multi_ood_in_ctx` | In-context extraction (unseen entities, multi-entity context) |
+| Pref_PK | `pert_ctx_orig` | Parametric preference under knowledge conflict |
+| Pref_ICK | `pert_ctx_pert` | In-context preference under knowledge conflict |
 
 ### 6. Analyze Results
 
-Open `analysis/plot_main_results.ipynb` in Jupyter to reproduce the paper's figures.
+Open `analysis/plot_main_results.ipynb` in Jupyter to visualize the results.
 
-## Training Conditions (Paper §3)
+## Experimental Conditions
 
-| Condition | Mode | Noise | Zipf α | Corpus File | Paper |
-|-----------|------|-------|--------|-------------|-------|
-| Single | `base` | 0% | — | `sec31_base.json` | §3.1 |
-| Repeated | `multiple-context` | 0% | — | `sec31_multi.json` | §3.1 |
-| +Noise 1% | `multiple-context` | 1% | — | `sec32_noise001.json` | §3.2 |
-| +Noise 3% | `multiple-context` | 3% | — | `sec32_noise003.json` | §3.2 |
-| +Noise 5% | `multiple-context` | 5% | — | `sec32_noise005.json` | §3.2 |
-| +Noise 10% | `multiple-context` | 10% | — | `sec32_noise010.json` | §3.2 |
-| Zipf+0% | `multiple-context` | 0% | 1.0 | `sec33_zipf_noise000.json` | §3.3 |
-| Zipf+1% | `multiple-context` | 1% | 1.0 | `sec33_zipf_noise001.json` | §3.3 |
-| Zipf+3% | `multiple-context` | 3% | 1.0 | `sec33_zipf_noise003.json` | §3.3 |
-| Zipf+5% | `multiple-context` | 5% | 1.0 | `sec33_zipf_noise005.json` | §3.3 |
-| Zipf+10% | `multiple-context` | 10% | 1.0 | `sec33_zipf_noise010.json` | §3.3 |
+### §3.1 — Intra-Document Repetition (Figure 3)
+
+| Condition | Mode | Description |
+|-----------|------|-------------|
+| SINGLE | `base` | One paragraph per entity; attributes appear once |
+| REPEATED | `multiple-context` | Two paraphrased paragraphs per entity, mixed with other entities |
+
+### §3.2 — Within-Document Inconsistency (Figure 4)
+
+Starting from REPEATED, inject inconsistency by perturbing attribute values in the leading paragraph.
+
+| Noise | Corpus |
+|-------|--------|
+| 1% | `repeated_noise001.json` |
+| 5% | `repeated_noise005.json` |
+| 10% | `repeated_noise010.json` |
+
+### §3.3 — Skewed Knowledge Distribution (Table 1, Figures 5–6)
+
+Entity occurrences follow a Zipfian distribution (α=1.0) with inconsistency noise.
+
+| Noise | Corpus |
+|-------|--------|
+| 0% | `zipf_noise000.json` |
+| 1% | `zipf_noise001.json` |
+| 5% | `zipf_noise005.json` |
+| 10% | `zipf_noise010.json` |
 
 ## Model Architecture
 
 | Hyperparameter | Value |
 |----------------|-------|
-| Architecture | GPT-2 |
+| Architecture | GPT-2 (decoder-only Transformer) |
 | Layers | 8 |
 | Hidden dim | 512 |
 | Attention heads | 8 |
-| FFN inner dim | 2048 |
+| FFN inner dim | 2,048 |
 | Max sequence length | 512 |
 | Parameters | ~51M |
 | Optimizer | AdamW (lr=4e-4, weight_decay=0.1) |
