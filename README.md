@@ -71,28 +71,32 @@ python dataset_generation/generate_corpus.py \
     --profiles_json data/bioS_train.json \
     --out_dir data/corpora --out_json single.json \
     --mode single --zipf_alpha 0 --noise_prob 0.0 \
-    --max_steps 16000 --batch_size 32 --grad_accum 4
+    --max_steps 16000 --batch_size 32 --grad_accum 4 \
+    --do_build_dataset
 
 # §3.1 — REPEATED (two paraphrased paragraphs per entity, mixed with other entities)
 python dataset_generation/generate_corpus.py \
     --profiles_json data/bioS_train.json \
     --out_dir data/corpora --out_json repeated.json \
     --mode repeated --zipf_alpha 0 --noise_prob 0.0 \
-    --max_steps 16000 --batch_size 32 --grad_accum 4
+    --max_steps 16000 --batch_size 32 --grad_accum 4 \
+    --do_build_dataset
 
 # §3.2 — REPEATED + within-document inconsistency (noise=1%)
 python dataset_generation/generate_corpus.py \
     --profiles_json data/bioS_train.json \
     --out_dir data/corpora --out_json repeated_noise001.json \
     --mode repeated --zipf_alpha 0 --noise_prob 0.01 \
-    --max_steps 16000 --batch_size 32 --grad_accum 4
+    --max_steps 16000 --batch_size 32 --grad_accum 4 \
+    --do_build_dataset
 
 # §3.3 — REPEATED + Zipfian (α=1.0) + noise=1%
 python dataset_generation/generate_corpus.py \
     --profiles_json data/bioS_train.json \
     --out_dir data/corpora --out_json zipf_noise001.json \
     --mode repeated --zipf_alpha 1.0 --noise_prob 0.01 \
-    --max_steps 16000 --batch_size 32 --grad_accum 4
+    --max_steps 16000 --batch_size 32 --grad_accum 4 \
+    --do_build_dataset
 ```
 
 ### 4. Train Model
