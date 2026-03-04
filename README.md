@@ -184,10 +184,13 @@ Entity occurrences follow a Zipfian distribution (α=1.0) with inconsistency noi
 ## Citation
 
 ```bibtex
-@article{kim2025training,
-  title={How Training Data Shapes the Use of Parametric and In-Context Knowledge in Language Models},
-  author={Kim, Minsung and Kim, Dong-Kyum and Kwon, Jea and Yang, Nakyeong and Jung, Kyomin and Cha, Meeyoung},
-  journal={arXiv preprint arXiv:2510.02370},
-  year={2025}
+@misc{kim2026trainingdatashapesuse,
+      title={How Training Data Shapes the Use of Parametric and In-Context Knowledge in Language Models},
+      author={Minsung Kim and Dong-Kyum Kim and Jea Kwon and Nakyeong Yang and Kyomin Jung and Meeyoung Cha},
+      year={2026},
+      eprint={2510.02370},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2510.02370},
 }
 ```
