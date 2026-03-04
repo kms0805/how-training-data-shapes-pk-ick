@@ -8,20 +8,23 @@ from concurrent.futures import ThreadPoolExecutor, wait, FIRST_COMPLETED
 
 # ==== Argparse configuration ====
 def parse_args():
-    parser = argparse.ArgumentParser(description="Zipf-distribution-based dataset generator")
+    parser = argparse.ArgumentParser(description="Training corpus generator with controlled repetition, noise, and frequency distribution")
 
     parser.add_argument("--profiles_json", type=str, default="data/bioS_train.json",
                         help="Path to profiles JSON")
     parser.add_argument("--out_dir", type=str, default="data/corpora",
                         help="Output directory")
-    parser.add_argument("--out_json", type=str, default="zipf_100_1.json",
+    parser.add_argument("--out_json", type=str, default="corpus.json",
                         help="Output JSON filename")
     parser.add_argument("--mode", type=str, choices=["base", "context", "multiple-context"],
-                        default="multiple-context", help="Sampling mode")
+                        default="multiple-context",
+                        help="Corpus mode: 'base' = SINGLE (one paragraph per entity), "
+                             "'multiple-context' = REPEATED (two paraphrased paragraphs per entity, "
+                             "mixed with other entities). 'context' is kept for compatibility.")
     parser.add_argument("--zipf_s", type=float, default=1.0,
-                        help="Zipf distribution s parameter")
+                        help="Zipf distribution α parameter (§3.3). 0 = uniform.")
     parser.add_argument("--noise_prob", type=float, default=0.01,
-                        help="Attribute mutation probability")
+                        help="Within-document inconsistency probability (§3.2)")
     parser.add_argument("--sep", type=str, default=" ",
                         help="Sentence separator")
     parser.add_argument("--seed", type=int, default=42,

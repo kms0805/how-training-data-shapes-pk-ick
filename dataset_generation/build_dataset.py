@@ -1,12 +1,15 @@
-"""Build structured biography dataset with train/unknown/pert splits.
+"""Build structured biography dataset with train/unseen/pert splits.
 
 Converts raw profiles (from generate_profiles.py) into the bioS format
-used for training and evaluation.  Each profile gets:
+used for training and evaluation (§2.1).  Each profile gets:
   - train_corpora : 5 paragraphs (each = 4 shuffled attribute sentences)
-  - test_corpus   : 1 paragraph  (same structure)
-  - probes        : per-attribute [prefix, target] pairs
+  - test_corpus   : 1 paragraph  (evaluation in-context paragraph)
+  - probes        : per-attribute [prefix, target] pairs (7th template)
 
-Splits into bioS_train, bioS_unknown, and bioS_pert (perturbed train).
+Splits:
+  - bioS_train   : E_train  (|E_train| = 50k, for training + PKU/conflict eval)
+  - bioS_unknown : E_unseen (|E_unseen| = 50k, for ICKU evaluation)
+  - bioS_pert    : perturbed version of train (for knowledge conflict eval)
 """
 
 from __future__ import annotations

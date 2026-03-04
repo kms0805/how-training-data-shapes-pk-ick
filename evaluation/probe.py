@@ -1,14 +1,23 @@
 #!/usr/bin/env python3
 # ==========================================
-# 20-sample Probe (First-Token Accuracy / Exact-Match)
-# - train: param / in_ctx / pert_ctx_orig / pert_ctx_pert
-# - unknown: ood_in_ctx
-# - additional: multi_in_ctx / multi_ood_in_ctx
-# ------------------------------------------
+# Knowledge Probing (First-Token Accuracy / Exact-Match)
+#
+# Evaluates 200 randomly sampled entities per split (§2.3).
+#
+# Probe modes → Paper metrics:
+#   param            → Acc_PKU   (Parametric Knowledge Utilization)
+#   multi_ood_in_ctx → Acc_ICKU  (In-Context Knowledge Utilization, unseen entities)
+#   pert_ctx_orig    → Pref_PK   (Parametric preference under knowledge conflict)
+#   pert_ctx_pert    → Pref_ICK  (In-context preference under knowledge conflict)
+#
+# Additional modes (not in main figures):
+#   in_ctx           → single-entity in-context (train entities)
+#   ood_in_ctx       → single-entity in-context (unseen entities)
+#   multi_in_ctx     → multi-entity in-context (train entities)
+#
 # Notes:
-#   - pert modes (pert_ctx_orig, pert_ctx_pert) use ATTR_KEYS_PERT only
-#   - other modes (param, in_ctx, ood_in_ctx, multi_in_ctx, multi_ood_in_ctx) use ATTR_KEYS_ALL
-#   - single seed, single run, single output CSV
+#   - pert modes use ATTR_KEYS_PERT = [birth_date, university]
+#   - other modes use ATTR_KEYS_ALL = [birth_city, birth_date, major, university]
 # ==========================================
 import os, random, re, json, logging, gc
 from pathlib import Path

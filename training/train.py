@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-GPT-2 (8-layer) pretraining on pre-generated corpus.
+8-layer decoder-only Transformer (GPT-2 style) pretraining on pre-generated corpus.
 
 Expects a JSON file produced by generate_corpus.py:
   - Format: ["text1", "text2", ...]  (list of strings)
 
 Uses SFTTrainer with packing for efficient training.
+See Table 3 & 4 in the paper for architecture and hyperparameters.
 """
 
 import os, re, json, argparse, random, wandb
