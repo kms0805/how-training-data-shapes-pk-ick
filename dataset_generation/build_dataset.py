@@ -8,7 +8,7 @@ used for training and evaluation (§2.1).  Each profile gets:
 
 Splits:
   - bioS_train   : E_train  (|E_train| = 50k, for training + PKU/conflict eval)
-  - bioS_unknown : E_unseen (|E_unseen| = 50k, for ICKU evaluation)
+  - bioS_unseen : E_unseen (|E_unseen| = 50k, for ICKU evaluation)
   - bioS_pert    : perturbed version of train (for knowledge conflict eval)
 """
 
@@ -309,7 +309,7 @@ def main():
         print(f"  Wrote {len(data):,} entries -> {path} ({size_mb:.1f} MB)")
 
     write_json(train_dataset, "bioS_train.json")
-    write_json(unknown_dataset, "bioS_unknown.json")
+    write_json(unknown_dataset, "bioS_unseen.json")
     write_json(pert_dataset, "bioS_pert.json")
 
     print("Done.")

@@ -13,7 +13,7 @@ This repository provides code for reproducing the controlled experiments in our 
 │   ├── seed_data/               # Source data (names, cities, universities, majors)
 │   ├── sentence_templates.py    # 4 attributes × 20 paraphrase templates
 │   ├── generate_profiles.py     # Step 1: Generate synthetic person profiles
-│   ├── build_dataset.py         # Step 2: Build structured bio dataset (train/unknown/pert)
+│   ├── build_dataset.py         # Step 2: Build structured bio dataset (train/unseen/pert)
 │   └── generate_corpus.py       # Step 3: Generate training corpora
 │
 ├── training/
@@ -50,7 +50,7 @@ python dataset_generation/generate_profiles.py \
 
 ### 2. Build Dataset
 
-Split profiles into train (50K) / unknown (50K) / perturbed sets for probing.
+Split profiles into E_train (50K) / E_unseen (50K) / perturbed sets for probing.
 
 ```bash
 python dataset_generation/build_dataset.py \
@@ -59,7 +59,7 @@ python dataset_generation/build_dataset.py \
     --n_train 50000
 ```
 
-Produces: `data/bioS_train.json`, `data/bioS_unknown.json`, `data/bioS_pert.json`
+Produces: `data/bioS_train.json`, `data/bioS_unseen.json`, `data/bioS_pert.json`
 
 ### 3. Generate Training Corpus
 
@@ -70,28 +70,28 @@ Generate a training corpus with controlled repetition structure, noise level, an
 python dataset_generation/generate_corpus.py \
     --profiles_json data/bioS_train.json \
     --out_dir data/corpora --out_json single.json \
-    --mode base --zipf_s 0 --noise_prob 0.0 \
+    --mode single --zipf_alpha 0 --noise_prob 0.0 \
     --max_steps 16000 --batch_size 32 --grad_accum 4
 
 # §3.1 — REPEATED (two paraphrased paragraphs per entity, mixed with other entities)
 python dataset_generation/generate_corpus.py \
     --profiles_json data/bioS_train.json \
     --out_dir data/corpora --out_json repeated.json \
-    --mode multiple-context --zipf_s 0 --noise_prob 0.0 \
+    --mode repeated --zipf_alpha 0 --noise_prob 0.0 \
     --max_steps 16000 --batch_size 32 --grad_accum 4
 
 # §3.2 — REPEATED + within-document inconsistency (noise=1%)
 python dataset_generation/generate_corpus.py \
     --profiles_json data/bioS_train.json \
     --out_dir data/corpora --out_json repeated_noise001.json \
-    --mode multiple-context --zipf_s 0 --noise_prob 0.01 \
+    --mode repeated --zipf_alpha 0 --noise_prob 0.01 \
     --max_steps 16000 --batch_size 32 --grad_accum 4
 
 # §3.3 — REPEATED + Zipfian (α=1.0) + noise=1%
 python dataset_generation/generate_corpus.py \
     --profiles_json data/bioS_train.json \
     --out_dir data/corpora --out_json zipf_noise001.json \
-    --mode multiple-context --zipf_s 1.0 --noise_prob 0.01 \
+    --mode repeated --zipf_alpha 1.0 --noise_prob 0.01 \
     --max_steps 16000 --batch_size 32 --grad_accum 4
 ```
 
@@ -124,12 +124,12 @@ Results are saved to `probe_results.csv` with columns: `model`, `step`, and per-
 
 **Evaluation metrics (§2.3):**
 
-| Metric | Probe Mode | Description |
+| Metric | CSV Column | Description |
 |--------|-----------|-------------|
-| Acc_PKU | `param` | Parametric recall without context (trained entities) |
-| Acc_ICKU | `multi_ood_in_ctx` | In-context extraction (unseen entities, multi-entity context) |
-| Pref_PK | `pert_ctx_orig` | Parametric preference under knowledge conflict |
-| Pref_ICK | `pert_ctx_pert` | In-context preference under knowledge conflict |
+| Acc_PKU | `em/pku` | Parametric recall without context (E_train) |
+| Acc_ICKU | `em/icku` | In-context extraction (E_unseen, multi-entity context) |
+| Pref_PK | `em/pref_pk` | Parametric preference under knowledge conflict |
+| Pref_ICK | `em/pref_ick` | In-context preference under knowledge conflict |
 
 ### 6. Analyze Results
 
@@ -141,8 +141,8 @@ Open `analysis/plot_main_results.ipynb` in Jupyter to visualize the results.
 
 | Condition | Mode | Description |
 |-----------|------|-------------|
-| SINGLE | `base` | One paragraph per entity; attributes appear once |
-| REPEATED | `multiple-context` | Two paraphrased paragraphs per entity, mixed with other entities |
+| SINGLE | `single` | One paragraph per entity; attributes appear once |
+| REPEATED | `repeated` | Two paraphrased paragraphs per entity, mixed with other entities |
 
 ### §3.2 — Within-Document Inconsistency (Figure 4)
 

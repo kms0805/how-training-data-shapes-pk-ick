@@ -16,12 +16,12 @@ def parse_args():
                         help="Output directory")
     parser.add_argument("--out_json", type=str, default="corpus.json",
                         help="Output JSON filename")
-    parser.add_argument("--mode", type=str, choices=["base", "context", "multiple-context"],
-                        default="multiple-context",
-                        help="Corpus mode: 'base' = SINGLE (one paragraph per entity), "
-                             "'multiple-context' = REPEATED (two paraphrased paragraphs per entity, "
-                             "mixed with other entities). 'context' is kept for compatibility.")
-    parser.add_argument("--zipf_s", type=float, default=1.0,
+    parser.add_argument("--mode", type=str, choices=["single", "repeated"],
+                        default="repeated",
+                        help="Corpus mode: 'single' = one paragraph per entity (§3.1 SINGLE), "
+                             "'repeated' = two paraphrased paragraphs per entity, "
+                             "mixed with other entities (§3.1 REPEATED).")
+    parser.add_argument("--zipf_alpha", type=float, default=1.0,
                         help="Zipf distribution α parameter (§3.3). 0 = uniform.")
     parser.add_argument("--noise_prob", type=float, default=0.01,
                         help="Within-document inconsistency probability (§3.2)")
@@ -77,7 +77,7 @@ if __name__ == "__main__":
     OUT_DIR = args.out_dir
     OUT_JSON = args.out_json
     MODE = args.mode
-    ZIPF_S = args.zipf_s
+    ZIPF_ALPHA = args.zipf_alpha
     NOISE_PROB = args.noise_prob
     SEP = args.sep
     SEED = args.seed
@@ -167,17 +167,11 @@ if __name__ == "__main__":
             a = b = paras[0]
         return a.strip(), b.strip()
 
-    def sample_base_one(profiles, idx, attr_pools, noise_prob):
+    def sample_single_one(profiles, idx, attr_pools, noise_prob):
         para = random.choice(profiles[idx]["train_corpora"]).strip()
         if noise_prob > 0.0:
             para = mutate_paragraph(para, idx, profiles, attr_pools, prob=noise_prob)
         return para
-
-    def sample_context_one(profiles, idx, attr_pools, noise_prob, sep):
-        p1, p2 = pick_two_paras_of(profiles[idx])
-        if noise_prob > 0.0:
-            p1 = mutate_paragraph(p1, idx, profiles, attr_pools, prob=noise_prob)
-        return f"{p1}{sep}{p2}"
 
     def interleaved_two_each_order(n_persons=3):
         labels = []
@@ -186,7 +180,7 @@ if __name__ == "__main__":
         random.shuffle(labels)
         return labels
 
-    def sample_multiple_context_one(profiles, idx_anchor, idx_partners, attr_pools, noise_prob, sep):
+    def sample_repeated_one(profiles, idx_anchor, idx_partners, attr_pools, noise_prob, sep):
         triplet = [idx_anchor] + idx_partners
         per_first, per_second = {}, {}
         for local, ref_idx in enumerate(triplet):
@@ -220,7 +214,7 @@ if __name__ == "__main__":
         f.write("\n]\n")
 
     def build_until_tokens_streaming_mt(
-        profiles, out_dir, out_json, mode, zipf_s, noise_prob, sep,
+        profiles, out_dir, out_json, mode, zipf_alpha, noise_prob, sep,
         target_tokens, tokenizer_name, seed,
         max_samples_cap=0, chunk_size=512, num_workers=4, max_inflight=None,
         log_every=10000, preprocess=True
@@ -235,7 +229,7 @@ if __name__ == "__main__":
         out_path = os.path.join(out_dir, out_json)
 
         pools = build_attr_pools(profiles)
-        zipf  = ZipfSampler(len(profiles), s=zipf_s)
+        zipf  = ZipfSampler(len(profiles), s=zipf_alpha)
         tok_shared = GPT2TokenizerFast.from_pretrained(tokenizer_name)  # Pre-load (shared by workers)
 
         if max_inflight is None:
@@ -246,13 +240,11 @@ if __name__ == "__main__":
             buf = []
             for _ in range(chunk_size):
                 idx_anchor = zipf.sample_one()
-                if mode == "base":
-                    text = sample_base_one(profiles, idx_anchor, pools, noise_prob)
-                elif mode == "context":
-                    text = sample_context_one(profiles, idx_anchor, pools, noise_prob, sep)
+                if mode == "single":
+                    text = sample_single_one(profiles, idx_anchor, pools, noise_prob)
                 else:
                     partners = zipf.sample_two_partners(idx_anchor)
-                    text = sample_multiple_context_one(profiles, idx_anchor, partners, pools, noise_prob, sep)
+                    text = sample_repeated_one(profiles, idx_anchor, partners, pools, noise_prob, sep)
                 buf.append(text)
             return buf
 
@@ -319,25 +311,23 @@ if __name__ == "__main__":
     # ==== Execution ====
     set_seed(SEED)
     profiles = load_profiles(PROFILES_JSON)
-    if len(profiles) < 3 and MODE == "multiple-context":
-        raise ValueError("multiple-context mode requires at least 3 profiles")
+    if len(profiles) < 3 and MODE == "repeated":
+        raise ValueError("repeated mode requires at least 3 profiles")
 
     tok = GPT2TokenizerFast.from_pretrained(TOKENIZER_NAME)
     pools = build_attr_pools(profiles)
-    zipf = ZipfSampler(len(profiles), s=ZIPF_S)
+    zipf = ZipfSampler(len(profiles), s=ZIPF_ALPHA)
 
     # Preview 5 samples
-    print(f"[preview] mode={MODE}, noise_prob={NOISE_PROB}, zipf_s={ZIPF_S}")
+    print(f"[preview] mode={MODE}, noise_prob={NOISE_PROB}, zipf_alpha={ZIPF_ALPHA}")
     tok_lens = []
     for i in range(N_PREVIEW):
         idx_anchor = zipf.sample_one()
-        if MODE == "base":
-            text = sample_base_one(profiles, idx_anchor, pools, NOISE_PROB)
-        elif MODE == "context":
-            text = sample_context_one(profiles, idx_anchor, pools, NOISE_PROB, SEP)
+        if MODE == "single":
+            text = sample_single_one(profiles, idx_anchor, pools, NOISE_PROB)
         else:
             partners = zipf.sample_two_partners(idx_anchor)
-            text = sample_multiple_context_one(profiles, idx_anchor, partners, pools, NOISE_PROB, SEP)
+            text = sample_repeated_one(profiles, idx_anchor, partners, pools, NOISE_PROB, SEP)
         n_tok = len(tok.encode(text, add_special_tokens=False))
         tok_lens.append(n_tok)
         print(f"  sample#{i}: tokens={n_tok} | {text[:100]}...")
@@ -361,7 +351,7 @@ if __name__ == "__main__":
             out_dir=OUT_DIR,
             out_json=OUT_JSON,
             mode=MODE,
-            zipf_s=ZIPF_S,
+            zipf_alpha=ZIPF_ALPHA,
             noise_prob=NOISE_PROB,
             sep=SEP,
             target_tokens=target_tokens,
