@@ -4,7 +4,7 @@
 
 ## Overview
 
-This repository provides code for reproducing the controlled experiments in our paper. We investigate how three properties of training data — **(i) intra-document repetition**, **(ii) within-document inconsistency**, and **(iii) skewed knowledge frequency distribution** — jointly enable robust utilization of both parametric knowledge (PK) and in-context knowledge (ICK) in language models.
+This repository provides code for reproducing the controlled experiments in our paper(ACL 2026). We investigate how three properties of training data — **(i) intra-document repetition**, **(ii) within-document inconsistency**, and **(iii) skewed knowledge frequency distribution** — jointly enable robust utilization of both parametric knowledge (PK) and in-context knowledge (ICK) in language models.
 
 ## Repository Structure
 
