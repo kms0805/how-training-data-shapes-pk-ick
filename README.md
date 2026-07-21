@@ -1,4 +1,6 @@
-# How Training Data Shapes the Use of Parametric and In-Context Knowledge in Language Models (ACL 2026 Main)
+# How Training Data Shapes the Use of Parametric and In-Context Knowledge in Language Models
+
+ACL 2026 Main
 
 [![arXiv](https://img.shields.io/badge/arXiv-2510.02370-b31b32.svg)](https://arxiv.org/abs/2510.02370)
 
